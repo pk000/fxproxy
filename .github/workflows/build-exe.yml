@@ -17,8 +17,13 @@ jobs:
 
       - name: Install dependencies and PyInstaller
         run: |
-          pip install -e .
-          pip install pyinstaller
+          pip install --no-cache-dir -e .
+          pip install --no-cache-dir pyinstaller
+
+      - name: Download UPX
+        run: |
+          Invoke-WebRequest -Uri "https://github.com" -OutFile "upx.zip"
+          Expand-Archive -Path "upx.zip" -DestinationPath "upx_dir"
 
       - name: Create wrapper entry point
         run: |
@@ -30,8 +35,23 @@ jobs:
           '@ | Set-Content -Encoding utf8 run.py
 
       - name: Build EXE
+        env:
+          PYTHONOPTIMIZE: "2"
         run: |
-          pyinstaller --onefile --name fxproxy --paths . --collect-all fxproxy run.py
+          pyinstaller --onefile `
+            --name fxproxy `
+            --paths . `
+            --collect-all fxproxy `
+            --upx-dir="upx_dir/upx-4.2.4-win64" `
+            --exclude-module tkinter `
+            --exclude-module unittest `
+            --exclude-module pydoc `
+            --exclude-module test `
+            --exclude-module pdb `
+            --exclude-module lib2to3 `
+            --exclude-module distutils `
+            --strip `
+            run.py
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v5

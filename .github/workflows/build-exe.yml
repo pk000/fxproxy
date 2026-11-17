@@ -35,7 +35,6 @@ jobs:
       - name: Build EXE with Nuitka
         run: |
           python -m nuitka --standalone --onefile `
-            --lto=yes `
             --assume-yes-for-downloads `
             --include-package=fxproxy `
             --include-package-data=fxproxy `

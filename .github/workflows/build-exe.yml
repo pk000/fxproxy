@@ -39,6 +39,7 @@ jobs:
             --include-package=fxproxy `
             --include-package-data=fxproxy `
             --enable-plugin=anti-bloat `
+            --enable-plugin=upx `
             --nofollow-import-to=pytest `
             --nofollow-import-to=unittest `
             --nofollow-import-to=pydoc `
@@ -48,9 +49,6 @@ jobs:
             --remove-output `
             --output-filename=fxproxy.exe `
             run.py
-
-      - name: Compress EXE with UPX
-        run: upx --best fxproxy.exe
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v5

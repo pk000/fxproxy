@@ -22,7 +22,7 @@ jobs:
 
       - name: Build EXE
         run: |
-          pyinstaller --onefile --name fxproxy --collect-all fxproxy -m fxproxy.cli
+          pyinstaller --onefile --name fxproxy --paths . --collect-all fxproxy fxproxy/cli.py
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v5

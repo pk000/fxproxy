@@ -20,9 +20,18 @@ jobs:
           pip install -e .
           pip install pyinstaller
 
+      - name: Create wrapper entry point
+        run: |
+          @'
+          from fxproxy.cli import main
+
+          if __name__ == "__main__":
+              main()
+          '@ | Set-Content -Encoding utf8 run.py
+
       - name: Build EXE
         run: |
-          pyinstaller --onefile --name fxproxy --paths . --collect-all fxproxy fxproxy/cli.py
+          pyinstaller --onefile --name fxproxy --paths . --collect-all fxproxy run.py
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v5

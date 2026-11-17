@@ -40,12 +40,13 @@ jobs:
             --name fxproxy `
             --paths . `
             --collect-all fxproxy `
+            --upx-exclude=python312.dll `
+            --upx-exclude=vcruntime140.dll `
             --exclude-module tkinter `
             --exclude-module unittest `
             --exclude-module pydoc `
             --exclude-module test `
             --exclude-module pdb `
-            --strip `
             run.py
 
       - name: Upload Artifact

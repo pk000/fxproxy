@@ -1,4 +1,4 @@
-name: Build Windows EXE (Nuitka)
+name: Build Windows EXE
 
 on:
   workflow_dispatch:
@@ -15,10 +15,13 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies and Nuitka
+      - name: Install dependencies and PyInstaller
         run: |
           pip install --no-cache-dir -e .
-          pip install --no-cache-dir nuitka zstandard ordered-set
+          pip install --no-cache-dir pyinstaller
+
+      - name: Install UPX
+        run: choco install upx -y
 
       - name: Create wrapper entry point
         run: |
@@ -29,19 +32,36 @@ jobs:
               main()
           '@ | Set-Content -Encoding utf8 run.py
 
-      - name: Build EXE with Nuitka
+      - name: Build EXE
+        env:
+          PYTHONOPTIMIZE: "2"
         run: |
-          python -m nuitka --standalone --onefile `
-            --assume-yes-for-downloads `
-            --include-package=fxproxy `
-            --include-package-data=fxproxy `
-            --enable-plugin=anti-bloat `
-            --remove-output `
-            --output-filename=fxproxy.exe `
+          pyinstaller --onefile `
+            --name fxproxy `
+            --paths . `
+            --collect-all fxproxy `
+            --upx-exclude=python312.dll `
+            --upx-exclude=vcruntime140.dll `
+            --exclude-module tkinter `
+            --exclude-module unittest `
+            --exclude-module pydoc `
+            --exclude-module test `
+            --exclude-module pdb `
+            --exclude-module sqlite3 `
+            --exclude-module _sqlite3 `
+            --exclude-module xml `
+            --exclude-module pyexpat `
+            --exclude-module ftplib `
+            --exclude-module imaplib `
+            --exclude-module smtplib `
+            --exclude-module poplib `
+            --exclude-module telnetlib `
+            --exclude-module turtle `
+            --exclude-module lib2to3 `
             run.py
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v5
         with:
           name: fxproxy-windows-exe
-          path: fxproxy.exe
+          path: dist/fxproxy.exe

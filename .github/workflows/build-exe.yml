@@ -8,12 +8,12 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install dependencies and PyInstaller
         run: |
@@ -25,7 +25,7 @@ jobs:
           pyinstaller --onefile --name fxproxy --collect-all fxproxy -m fxproxy.cli
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: fxproxy-windows-exe
           path: dist/fxproxy.exe

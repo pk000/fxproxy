@@ -20,10 +20,8 @@ jobs:
           pip install --no-cache-dir -e .
           pip install --no-cache-dir pyinstaller
 
-      - name: Download UPX
-        run: |
-          Invoke-WebRequest -Uri "https://github.com" -OutFile "upx.zip"
-          Expand-Archive -Path "upx.zip" -DestinationPath "upx_dir"
+      - name: Install UPX
+        run: choco install upx -y
 
       - name: Create wrapper entry point
         run: |
@@ -42,7 +40,6 @@ jobs:
             --name fxproxy `
             --paths . `
             --collect-all fxproxy `
-            --upx-dir="upx_dir/upx-4.2.4-win64" `
             --exclude-module tkinter `
             --exclude-module unittest `
             --exclude-module pydoc `

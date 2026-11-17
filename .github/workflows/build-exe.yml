@@ -45,8 +45,6 @@ jobs:
             --exclude-module pydoc `
             --exclude-module test `
             --exclude-module pdb `
-            --exclude-module lib2to3 `
-            --exclude-module distutils `
             --strip `
             run.py
 
